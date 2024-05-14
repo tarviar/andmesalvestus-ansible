@@ -1,0 +1,7 @@
+- name: Configure Netplan with a static IP
+  template:
+    src: netplan_config.j2
+    dest: /etc/netplan/00-installer-config.yaml
+
+- name: Apply Netplan configuration
+  shell: netplan apply

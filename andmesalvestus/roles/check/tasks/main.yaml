@@ -1,0 +1,15 @@
+    - name: Ensure mdadm is installed
+      apt:
+        name: mdadm
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Check if /dev/sdb and /dev/sdc are part of a RAID array
+      command: mdadm --detail /dev/md0
+      register: raid_detail
+      failed_when: "'/dev/sdb' not in raid_detail.stdout and '/dev/sdc' not in raid_detail.stdout"
+      changed_when: false
+
+    - name: Show RAID details
+      debug:
+        msg: "{{ raid_detail.stdout_lines }}"

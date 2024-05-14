@@ -1,0 +1,21 @@
+network:
+  version: 2
+  ethernets:
+    enp3s0f0:
+      dhcp4: false
+      addresses:
+        - {{ netplan_ip }}/24
+      gateway4: 192.168.161.254
+      nameservers:
+        addresses:
+          - 192.168.133.251
+          - 192.168.133.252
+          - 192.168.133.253
+        search:
+          - itcollege.ee
+    enp3s0f1:
+      dhcp4: true
+    enp4s0f0:
+      dhcp4: true
+    enp4s0f1:
+      dhcp4: true

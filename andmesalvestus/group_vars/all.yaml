@@ -1,0 +1,18 @@
+ntp_server: "pool.ntp.org"
+ceph_admin_user: "cephadmin"
+ceph_user_password: "cephadmin"
+ceph_release: "pacific"
+mon_ip: "192.168.161.111"
+cephadm_key_url: "https://download.ceph.com/keys/release.asc"
+cephadm_repo_url: "https://download.ceph.com/debian-reef/"
+web_console_url: "https://192.168.180.32:8443"
+web_console_user: "cephadmin"
+web_console_password: "cephadmin"
+ceph_ssh_pub_key: "/etc/ceph/ceph.pub"
+hosts:
+  andmed1: "192.168.161.111"
+  andmed2: "192.168.161.112"
+  andmed3: "192.168.161.113"
+osd_devices:
+  - "/dev/sdb"
+  - "/dev/sdc"

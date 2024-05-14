@@ -1,0 +1,17 @@
+---
+- name: restart chrony
+  systemd:
+    name: chrony
+    state: restarted
+    enabled: yes
+
+- name: reload sshd
+  systemd:
+    name: ssh
+    state: reloaded
+
+- name: restart docker
+  systemd:
+    name: docker
+    state: restarted
+    enabled: yes

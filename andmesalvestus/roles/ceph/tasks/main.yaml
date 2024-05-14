@@ -1,0 +1,58 @@
+- name: Add Ceph repository GPG key
+  apt_key:
+    url: "{{ cephadm_key_url }}"
+    state: present
+
+- name: Add Ceph repository
+  apt_repository:
+    repo: "deb {{ cephadm_repo_url }} {{ ansible_distribution_release }} main"
+    state: present
+
+- name: Install cephadm
+  apt:
+    name: cephadm
+    state: present
+
+- name: Initialize Ceph Cluster with cephadm
+  shell: "cephadm bootstrap --mon-ip {{ mon_ip }}"
+  args:
+    creates: "/etc/ceph/ceph.conf"
+  when: inventory_hostname == 'ceph-andmed1'
+
+- name: Add Ceph repo for CLI tools
+  shell: "cephadm add-repo --release reef"
+
+- name: Install Ceph common tools
+  shell: "cephadm install ceph-common"
+
+- name: Generate SSH key for Ceph
+  become: true
+  become_user: root
+  command: ssh-keygen -t rsa -f /etc/ceph/ceph -N ''
+  args:
+    creates: /etc/ceph/ceph.pub
+  when: inventory_hostname == 'ceph-andmed1'
+
+- name: Attach logical storage volumes to OSD nodes
+  shell: "ceph orch daemon add osd {{ inventory_hostname }}:/dev/sdb"
+  become: yes
+  when: inventory_hostname == 'ceph-andmed1'
+
+- name: Attach additional storage volumes to OSD nodes
+  shell: "ceph orch daemon add osd {{ inventory_hostname }}:/dev/sdc"
+  become: yes
+  when: inventory_hostname == 'ceph-andmed1'
+
+- name: Enable telemetry
+  shell: "cephadm shell -- ceph telemetry on --license sharing-1-0"
+  when: inventory_hostname == 'ceph-andmed1'
+
+- name: Check Ceph cluster health status
+  shell: "ceph -s"
+  register: ceph_health
+  when: inventory_hostname == 'ceph-andmed1'
+
+- name: Output Ceph health status
+  debug:
+    msg: "{{ ceph_health.stdout }}"
+  when: inventory_hostname == 'ceph-andmed1' and ceph_health is defined

@@ -1,0 +1,6 @@
+[dataservers]
+andmed1 ansible_host=192.168.161.111 netplan_ip=192.168.161.111
+andmed2 ansible_host=192.168.161.112 netplan_ip=192.168.161.112
+andmed3 ansible_host=192.168.161.113 netplan_ip=192.168.161.113
+[all:vars]
+ansible_ssh_user=andmed123

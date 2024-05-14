@@ -1,0 +1,20 @@
+---
+- name: Initialize Environment
+  hosts: all
+  become: yes
+  roles:
+    - init
+
+#- name: Install and Configure Ceph
+#  hosts: dataservers
+#  become: yes
+#  roles:
+#    - ceph
+#  tags: ceph
+
+- name: set host ip to stsatic
+  hosts: dataservers
+  become: yes
+  roles: 
+    - internet
+  tags: internet

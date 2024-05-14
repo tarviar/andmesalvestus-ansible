@@ -1,0 +1,64 @@
+- name: Install required packages
+  apt:
+    name:
+      - chrony
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg-agent
+      - software-properties-common
+    state: present
+
+- name: Configure NTP via Chrony
+  template:
+    src: chrony.conf.j2
+    dest: /etc/chrony/chrony.conf
+  notify: restart chrony
+
+- name: Configure hosts
+  template:
+    src: hosts.j2
+    dest: /etc/hosts
+
+- name: Create Ceph deployment user
+  user:
+    name: "{{ ceph_admin_user }}"
+    shell: "/bin/bash"
+    create_home: true
+    password: "{{ ceph_user_password }}"
+
+- name: Configure sudo for Ceph deployment user
+  copy:
+    dest: "/etc/sudoers.d/{{ ceph_admin_user }}"
+    content: "{{ ceph_admin_user }} ALL=(ALL:ALL) NOPASSWD:ALL"
+    mode: '0440'
+
+- name: Add Docker repository and install Docker
+  block:
+    - name: Add Docker GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker repository
+      apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+        state: present
+
+    - name: Install Docker and its components
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        state: latest
+        update_cache: yes
+  notify: restart docker
+
+- name: Ensure Root SSH login is enabled
+  ansible.builtin.blockinfile:
+    path: /etc/ssh/sshd_config
+    block: |
+      PermitRootLogin yes
+    create: yes
+  notify: restart sshd
