@@ -24,13 +24,13 @@ ansible_ssh_user=andmed123
 ```
 ## Paigalda Ansible:
 
-sudo apt update
-sudo apt install ansible
-ssh-keygen -t ed25519 -C "sinu.email@naide.ee"'
+- **sudo apt update**
+- **sudo apt install ansible**
+- **ssh-keygen -t ed25519 -C "sinu.email@naide.ee"'**
 
 ## Kopeeri SSH võtmed serveritesse:
 
-ssh-copy-id andmed123@192.168.161.111
-ssh-copy-id andmed123@192.168.161.112
-ssh-copy-id andmed123@192.168.161.113
+- **ssh-copy-id andmed123@192.168.161.111**
+- **ssh-copy-id andmed123@192.168.161.112**
+- **ssh-copy-id andmed123@192.168.161.113**
 
