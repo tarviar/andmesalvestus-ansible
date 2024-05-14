@@ -21,7 +21,7 @@ andmed3 ansible_host=192.168.161.113 netplan_ip=192.168.161.113
 
 [all:vars]
 ansible_ssh_user=andmed123
-
+```
 ## Paigalda Ansible:
 
 sudo apt update
